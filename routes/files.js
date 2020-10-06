@@ -37,19 +37,23 @@ router.post('/send', async (req, res) => {
   }
   // Get data from db 
   try {
+    console.log("ok3");
     const file = await File.findOne({ uuid: uuid });
     if(file.sender) {
       return res.status(422).send({ error: 'Email already sent once.'});
     }
+    
     file.sender = emailFrom;
     file.receiver = emailTo;
+    
     const response = await file.save();
     // send mail
+    console.log("ok4");
     const sendMail = require('../services/mailService');
     sendMail({
       from: emailFrom,
       to: emailTo,
-      subject: 'inShare file sharing',
+      subject: 'goShare file sharing',
       text: `${emailFrom} shared a file with you.`,
       html: require('../services/emailTemplate')({
                 emailFrom, 
